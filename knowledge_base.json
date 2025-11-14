@@ -1,0 +1,24 @@
+{
+  "questions": [
+    {
+      "question": "Hello",
+      "answer": "Hey There!"
+    },
+    {
+      "question": "halo",
+      "answer": "hey"
+    },
+    {
+      "question": "hai",
+      "answer": "halo"
+    },
+    {
+      "question": "hai apa kabar?",
+      "answer": "aku baik baik saja, kamu?"
+    },
+    {
+      "question": "apa",
+      "answer": "apa"
+    }
+  ]
+}
