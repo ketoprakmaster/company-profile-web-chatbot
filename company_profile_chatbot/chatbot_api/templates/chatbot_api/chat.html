@@ -1,41 +1,95 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Chatbot Demo</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        #chatbox { border: 1px solid #ccc; padding: 10px; width: 400px; height: 300px; overflow-y: auto; }
-        .user { color: blue; }
-        .bot { color: green; }
-    </style>
+  <title>Floating Chatbot</title>
+  <style>
+    body { font-family: Arial, sans-serif; }
+
+    /* Floating widget */
+    #chatbot-widget {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 300px;
+      height: 400px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+      z-index: 9999; /* supaya di atas konten lain */
+    }
+
+    #chatbot-header {
+      background: #007bff;
+      color: white;
+      padding: 8px;
+      text-align: center;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #chatbox {
+      flex: 1;
+      padding: 8px;
+      overflow-y: auto;
+      font-size: 14px;
+    }
+
+    #chatbot-input {
+      border: none;
+      border-top: 1px solid #ccc;
+      padding: 8px;
+      width: calc(100% - 60px);
+    }
+
+    #send-btn {
+      width: 50px;
+      border: none;
+      background: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+
+    .user { color: blue; }
+    .bot { color: green; }
+  </style>
 </head>
 <body>
-    <h2>Chatbot Demo</h2>
+  <h2>Halaman Utama Website</h2>
+  <p>Konten lain tetap bisa ditampilkan di sini.</p>
+
+  <!-- Floating Chatbot -->
+  <div id="chatbot-widget">
+    <div id="chatbot-header">💬 Chatbot</div>
     <div id="chatbox"></div>
-    <input type="text" id="message" placeholder="Type your message..." />
-    <button onclick="sendMessage()">Send</button>
+    <div style="display:flex;">
+      <input type="text" id="chatbot-input" placeholder="Type a message..." />
+      <button id="send-btn" onclick="sendMessage()">Send</button>
+    </div>
+  </div>
 
-    <script>
-        async function sendMessage() {
-            const msg = document.getElementById("message").value;
-            if (!msg) return;
+  <script>
+    async function sendMessage() {
+      const input = document.getElementById("chatbot-input");
+      const msg = input.value.trim();
+      if (!msg) return;
 
-            // tampilkan pesan user
-            const chatbox = document.getElementById("chatbox");
-            chatbox.innerHTML += `<div class="user">You: ${msg}</div>`;
+      const chatbox = document.getElementById("chatbox");
+      chatbox.innerHTML += `<div class="user">You: ${msg}</div>`;
 
-            // kirim ke API
-            const response = await fetch("/api/chat/", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: msg })
-            });
-            const data = await response.json();
+      const response = await fetch("/api/chat/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: msg })
+      });
+      const data = await response.json();
 
-            // tampilkan balasan bot
-            chatbox.innerHTML += `<div class="bot">Bot: ${data.reply}</div>`;
-            document.getElementById("message").value = "";
-        }
-    </script>
+      chatbox.innerHTML += `<div class="bot">Bot: ${data.reply}</div>`;
+      input.value = "";
+      chatbox.scrollTop = chatbox.scrollHeight;
+    }
+  </script>
 </body>
 </html>
